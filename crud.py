@@ -1,6 +1,7 @@
-# crud.py
 from database import db
 from models import Category, Instrument
+from models import User
+
 
 def create_category(name):
     category = Category(name=name)
@@ -45,3 +46,16 @@ def delete_category_with_cascade(category_id):
         db.session.delete(category)
         db.session.commit()
     return category
+
+
+def create_user(username, password):
+    if User.query.filter_by(username=username).first():
+        return None
+    user = User(username=username)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
+    return user
+
+def get_user_by_username(username):
+    return User.query.filter_by(username=username).first()
