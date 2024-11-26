@@ -5,7 +5,6 @@ from flask_jwt_extended import (
 from config import Config
 from database import db, migrate
 import crud
-
 app = Flask(__name__)
 app.config.from_object(Config)
 
