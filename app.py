@@ -101,7 +101,6 @@ def get_instrument(instrument_id):
 
 
 @app.route('/instruments', methods=['GET'])
-@jwt_required()
 def get_all_instruments():
     try:
         instruments = crud.get_all_instruments()
