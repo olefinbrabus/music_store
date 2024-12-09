@@ -59,7 +59,7 @@ def test_delete():
         print(f"Error deleting data: {response.json()}")
 
 
-test_sizes = [1000, 10000]
+test_sizes = [1000, 10000, 100000]
 results = []
 
 for size in test_sizes:
@@ -86,4 +86,4 @@ for size in test_sizes:
 df_results = pd.DataFrame(results)
 print(df_results)
 
-df_results.to_csv("api_performance_results.csv", index=False)
+df_results.to_csv("api_performance_results_with_indexes.csv", index=False)

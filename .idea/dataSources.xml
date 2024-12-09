@@ -19,5 +19,15 @@
         </library>
       </libraries>
     </data-source>
+    <data-source source="LOCAL" name="PostgreSQL (CloudSQL Proxy)" uuid="13ccbda1-9a80-42fa-9cc6-cff3fff56a4f">
+      <driver-ref>postgresql.cloud_sql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>postgresql://Library_backgoants:ee2f3ac01ec7e747815b6785daed74af6da3f3b7@rzw8e.h.filess.io:5433/Library_backgoants</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
+      </jdbc-additional-properties>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
