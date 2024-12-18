@@ -1,0 +1,43 @@
+version: '3.9'
+services:
+  postgres_primary:
+    image: postgres:15
+    container_name: postgres_primary
+    environment:
+      POSTGRES_USER: main_user
+      POSTGRES_PASSWORD: secure_password
+      POSTGRES_DB: main_db
+    volumes:
+      - postgres_data_primary:/var/lib/postgresql/data
+      - ./backups:/backups
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U main_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres_replica:
+    image: postgres:15
+    container_name: postgres_replica
+    environment:
+      POSTGRES_USER: replica_user
+      POSTGRES_PASSWORD: replica_password
+      POSTGRES_DB: main_db
+      PRIMARY_HOST: postgres_primary
+    depends_on:
+      - postgres_primary
+    volumes:
+      - postgres_data_replica:/var/lib/postgresql/data
+    networks:
+      - postgres_network
+
+networks:
+  postgres_network:
+
+volumes:
+  postgres_data_primary:
+  postgres_data_replica:
