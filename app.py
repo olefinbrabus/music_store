@@ -4,6 +4,8 @@ from flask import Flask, jsonify, request
 from flask_jwt_extended import (
     JWTManager, create_access_token, jwt_required, get_jwt
 )
+from sqlalchemy.orm import Query
+
 from config import Config
 from database import db, migrate
 import crud
@@ -104,12 +106,41 @@ def get_instrument(instrument_id):
 
 @app.route('/instruments', methods=['GET'])
 def get_all_instruments():
+
     try:
         instruments = crud.get_all_instruments()
         return jsonify([{"id": inst.id, "name": inst.name, "price": inst.price, "category_id": inst.category_id} for inst in instruments])
     except Exception:
         return jsonify({"error": "An error occurred while retrieving instruments"}), 500
 
+
+@app.route('/instruments', methods=['GET'])
+def instruments():
+    operation = request.args.get('operation')
+
+    if operation == 'filter':
+        price_min = request.args.get('price_min', type=float)
+        price_max = request.args.get('price_max', type=float)
+        category_ids = request.args.getlist('category_ids', type=int)
+        search = request.args.get('search')
+        result = crud.get_filtered_instruments( price_min, price_max, category_ids, search)
+        return jsonify(result)
+
+    elif operation == 'sort':
+        sort_by = request.args.get('sort_by', default='price')
+        order = request.args.get('order', default='asc')
+        limit = request.args.get('limit', default=10, type=int)
+        offset = request.args.get('offset', default=0, type=int)
+        result = crud.get_sorted_instruments(sort_by, order, limit, offset)
+        return jsonify(result)
+
+    elif operation == 'count_by_category':
+        result = crud.get_instruments_count_by_category()
+        return jsonify(result)
+
+
+    else:
+        return jsonify({"error": "Invalid operation"}), 400
 
 @app.route('/instruments/<int:instrument_id>', methods=['PUT'])
 @jwt_required()
